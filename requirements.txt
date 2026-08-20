@@ -1,0 +1,45 @@
+# Core -- required to import/run this repo at all.
+# Install torch/torchvision matching your own CUDA driver first (see
+# https://pytorch.org/get-started/locally/ for the right --extra-index-url);
+# versions below are unpinned on purpose since the right CUDA build is
+# machine-specific.
+torch>=1.12
+torchvision>=0.13
+numpy
+tqdm
+
+# OpenAI CLIP -- provides `import clip`. This is the "openai-clip" PyPI
+# package; do NOT `pip install clip`, that's an unrelated package.
+openai-clip
+ftfy
+regex
+
+# Imported unconditionally by model_loaders.py, so required even if you
+# never pass --vlm_name SigLIP.
+transformers>=4.30
+
+# Needed only if you use --vlm_name SigLIP (SigLIP's tokenizer requires both).
+sentencepiece
+protobuf
+
+# Needed only if you use --backbone resnet18_cub.
+pytorchcv
+
+# NOTE: the final-layer elastic-net solver (train_cbm_suite.py, ablations/*.py)
+# is vendored locally in glm_saga/ -- not installed via pip. Do not
+# `pip install glm-saga`; a copy on sys.path ahead of it would shadow the
+# vendored one anyway, so it'd just be a redundant/confusing install.
+
+# --------------------------------------------------------------------------
+# Not on PyPI under these names -- install from source if you need them.
+# Everything else in this file is enough for CLIP/SigLIP + any torchvision
+# backbone, dinov2, or perception_encoder; skip this section otherwise.
+# --------------------------------------------------------------------------
+# --vlm_name SAIL             : custom package (config.SAIL_CHECKPOINT_PATH
+#                                expects it cloned as a sibling "../SAIL" dir).
+# --vlm_name FLAIR             : custom package, weights pulled from the HF
+#                                Hub repo "xiaorui638/flair" (config.FLAIR_MODEL_REPO).
+# --backbone franca            : custom package (config.FRANCA_ARCH etc.).
+# --backbone perception_encoder: provides `core.vision_encoder` -- Meta's
+#                                Perception Encoder (PE-Core-L14-336).
+# --backbone dinov2            : auto-downloaded via torch.hub.

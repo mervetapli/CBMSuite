@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Generated artifacts from training runs
+saved_activations/*
+saved_models/*
+teacher_models/*
+
+.ipynb_checkpoints/
+.DS_Store
+*.egg-info/

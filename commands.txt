@@ -1,0 +1,15 @@
+python goodness_of_concepts.py --mode agnostic --concept_set "data/concept_sets/random_strings.txt" --dataset "cub" --backbone 'resnet18_cub' --feature_layer 'features.final_pool' --vlm_name "SAIL"
+python goodness_of_concepts.py --mode specific --concept_set "data/concept_sets/wiki_filtered.txt" --dataset "imagenet_100" --backbone 'resnet50' --vlm_name "SAIL"
+
+python train_cbm_suite.py   # all defaults: dataset=cifar10, backbone=clip_RN50, vlm_name=ViT-B/16, concept_set=data/concept_sets/cifar10_filtered.txt (auto-derived from --dataset)
+
+python train_cbm_suite.py --backbone "resnet18_cub" --feature_layer 'features.final_pool' --dataset "cub" --concept_set 'data/concept_sets/cub_filtered.txt' --n_iters 100
+
+python train_cbm_suite.py --dataset "imagenet" --backbone "resnet50" --concept_set 'data/concept_sets/imagenet_filtered.txt'   # needs config.py's DATASET_ROOTS["imagenet_train"/"imagenet_val"] to point at a real local ImageNet; training defaults are imagenet_100's, not independently tuned
+
+
+python evaluate.py --model_dir 'saved_models/clip_RN50_2026_08_19_17_48'   # accuracy + concept-usage sparsity + top-k concepts per predicted class; --model_dir is any train_cbm_suite.py/ablations/*.py output dir
+
+python ablations/train_linear_cbm.py --dataset "cifar10" --backbone "clip_RN50"   # ablation: no ReLU between proj_layer's two Linear layers
+python ablations/train_wo_distill.py --dataset "cifar10" --backbone "clip_RN50"   # ablation: no teacher model, no distillation term
+python ablations/set_refinement.py --dataset "imagenet_100" --concept_set "data/concept_sets/wiki_filtered.txt"   # entropy-guided pruning vs. random-removal baseline
